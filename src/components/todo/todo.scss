@@ -1,0 +1,31 @@
+@mixin flex-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.todo {
+  padding: 10px;
+  .todo__container {
+    @include flex-box;
+    .todo__info {
+      @include flex-box;
+      gap: 10px;
+      font-size: 20px;
+      color: #5285ec;
+    }
+
+    .todo__actions {
+      @include flex-box;
+      gap: 10px;
+      img {
+        object-fit: cover;
+        cursor: pointer;
+      }
+    }
+  }
+
+  hr {
+    background-color: #bbb;
+  }
+}

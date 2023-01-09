@@ -1,0 +1,13 @@
+.mainLayout {
+  flex-direction: column;
+  height: 100%;
+  overflow-x: hidden;
+  .main {
+    width: 70%;
+    height: 90%;
+    margin: 0 auto;
+    @media screen and (max-width: 400px) {
+      width: 100% !important;
+    }
+  }
+}
