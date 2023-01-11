@@ -1,7 +1,6 @@
 import { ActionType } from "../action.types";
 
 export const loginUser = (userData) => {
-  console.log('userData', userData);
   return async (dispatch) => {
     dispatch({ type: ActionType.USER_LOGIN_SUCCESS, payload: userData });
   };
