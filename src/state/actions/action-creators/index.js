@@ -32,6 +32,16 @@ export const editModalClose = () => {
     dispatch({ type: ActionType.EDIT_MODAL_CLOSE });
   };
 };
+export const deleteModalOpen = () => {
+  return (dispatch) => {
+    dispatch({ type: ActionType.DELETE_MODAL_OPEN });
+  };
+};
+export const deleteModalClose = () => {
+  return (dispatch) => {
+    dispatch({ type: ActionType.DELETE_MODAL_CLOSE });
+  };
+};
 
 export const addTodo = (todo) => {
   return async (dispatch) => {

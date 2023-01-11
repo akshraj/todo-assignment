@@ -4,9 +4,11 @@ import EditIcon from "../../assets/image/pen-solid.png";
 import DeleteIcon from "../../assets/image/trash-solid.png";
 import { useActions } from "../../hooks/useActions";
 import useAuth from "../../hooks/useAuth";
+import { truncate } from "../../utils/utils";
 
 export default function Todo({ title, id, isCompleted }) {
-  const { deleteTodo, completeTodo, getTodo, editModalOpen } = useActions();
+  const { deleteTodo, completeTodo, getTodo, editModalOpen, deleteModalOpen } =
+    useActions();
   const { user } = useAuth();
   const [isChecked, setIsChecked] = useState(isCompleted);
 
@@ -15,8 +17,9 @@ export default function Todo({ title, id, isCompleted }) {
     editModalOpen();
   };
 
-  const deleteTodoHandler = () => {
-    deleteTodo(id);
+  const deleteTodoHandler = (id) => {
+    getTodo(id);
+    deleteModalOpen();
   };
 
   const handleChange = (e) => {
@@ -37,6 +40,7 @@ export default function Todo({ title, id, isCompleted }) {
             value={title}
           />
           <p
+            title={title}
             style={{
               textDecoration: isChecked ? "line-through" : "none",
               color: isChecked ? "#537178" : "inherit",
@@ -48,7 +52,7 @@ export default function Todo({ title, id, isCompleted }) {
         </div>
         <div className="todo__actions">
           <img src={EditIcon} alt="" onClick={() => openEditModalHandler(id)} />
-          <img src={DeleteIcon} alt="" onClick={deleteTodoHandler} />
+          <img src={DeleteIcon} alt="" onClick={() => deleteTodoHandler(id)} />
         </div>
       </div>
     </div>

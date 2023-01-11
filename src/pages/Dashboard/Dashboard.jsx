@@ -1,15 +1,20 @@
 import React, { useCallback, useEffect, useState } from "react";
-import Button from "../../components/button";
-import Card from "../../components/card";
-import Input from "../../components/Input";
 import searchIcon from "../../assets/image/search-solid.png";
 import "./dashboard.scss";
-import Todos from "../../components/todos";
 import useAuth from "../../hooks/useAuth";
 import { useActions } from "../../hooks/useActions";
 import { useSelector } from "react-redux";
-import Modal from "../../components/modal";
-import Chart from "../../components/chart";
+import { truncate } from "../../utils/utils";
+import {
+  Modal,
+  Todos,
+  Input,
+  Card,
+  Button,
+  Chart,
+  Toast,
+} from "../../components";
+import { toast } from "react-toastify";
 
 const debounce = (func) => {
   let timer;
@@ -22,7 +27,6 @@ const debounce = (func) => {
     }, 500);
   };
 };
-
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -38,8 +42,12 @@ export default function Dashboard() {
     modalClose,
     editTodo,
     editModalClose,
+    deleteModalClose,
+    deleteTodo,
   } = useActions();
-  const { isOpen, isEditOpen } = useSelector((state) => state.modalState);
+  const { isOpen, isEditOpen, isDeleteOpen } = useSelector(
+    (state) => state.modalState
+  );
   const [todos, setTodos] = useState([]);
 
   useEffect(() => {
@@ -83,36 +91,62 @@ export default function Dashboard() {
       : 0;
   };
 
-  const createTask = () => {
+  const createTask = (e) => {
+    e.preventDefault();
     setError("");
     if (!task) {
-      setError("task title is required");
+      setError("Task is required");
       return;
     }
     const data = {
       id: Math.round(Math.random() * 1000),
       userId: user?.id,
-      title: task,
+      title: task.trim(),
       isCompleted: false,
     };
     addTodo(data);
     modalClose();
     setTask("");
+    toast("Task Created Successfully", {
+      position: "top-right",
+    });
   };
 
-  const editTask = () => {
+  const editTask = (e) => {
+    e.preventDefault();
     setError("");
     if (!editTaskTitle) {
-      setError("task title is required");
+      setError("Task is required");
       return;
     }
-    editTodo({ title: editTaskTitle, id: todo?.id });
+    editTodo({ title: editTaskTitle.trim(), id: todo?.id });
     editModalClose();
     setEditTaskTitle("");
+    toast("Task Edited Successfully", {
+      position: "top-right",
+    });
+  };
+
+  const closeModal = () => {
+    setError("");
+    modalClose();
+  };
+
+  const handleDeleteConfirm = (action) => {
+    if (action.toLowerCase() === "yes") {
+      deleteTodo(todo?.id);
+      deleteModalClose();
+      toast("Task Deleted Successfully", {
+        position: "top-right",
+      });
+    } else {
+      deleteModalClose();
+    }
   };
 
   return (
     <>
+      <Toast />
       {data?.length > 0 ? (
         <div className="dashboard">
           <div className="tasks-container">
@@ -143,7 +177,7 @@ export default function Dashboard() {
                               : "none",
                           }}
                         >
-                          {d.title}
+                          {truncate(d.title, 20)}
                         </li>
                       ))
                   : null}
@@ -192,30 +226,22 @@ export default function Dashboard() {
             <Card
               width="296px"
               height="193px"
-              onClick={() => modalClose()}
-              create={true}
+              onClick={closeModal}
+              closeBtn={true}
             >
               <p>+ New Task</p>
-              <Input
-                type="text"
-                placeholder="Task Name"
-                onChange={(e) => setTask(e.target.value)}
-                value={task}
-              />
-              {!!error ? (
-                <p
-                  style={{
-                    color: "red",
-                    fontSize: "14px",
-                    textAlign: "center",
-                  }}
-                >
-                  {error}
-                </p>
-              ) : null}
-              <Button style={{ width: "100%" }} onClick={createTask}>
-                + New Task
-              </Button>
+              <form onSubmit={createTask}>
+                <Input
+                  type="text"
+                  placeholder="Task Name"
+                  onChange={(e) => setTask(e.target.value)}
+                  value={task}
+                />
+                {!!error ? <p className="error">{error}</p> : null}
+                <Button style={{ width: "100%" }} type="submit">
+                  + New Task
+                </Button>
+              </form>
             </Card>
           </div>
         </Modal>
@@ -228,31 +254,52 @@ export default function Dashboard() {
               width="296px"
               height="193px"
               onClick={() => editModalClose()}
-              edit={true}
+              closeBtn={true}
             >
               <p>+ Edit Task</p>
-              <Input
-                type="text"
-                placeholder="Task Name"
-                onChange={(e) => setEditTaskTitle(e.target.value)}
-                value={editTaskTitle}
-              />
-              {!!error ? (
-                <p
-                  style={{
-                    color: "red",
-                    fontSize: "14px",
-                    textAlign: "center",
-                  }}
-                >
-                  {error}
-                </p>
-              ) : null}
-              <Button style={{ width: "100%" }} onClick={editTask}>
-                + Edit Task
-              </Button>
+              <form onSubmit={editTask}>
+                <Input
+                  type="text"
+                  placeholder="Task Name"
+                  onChange={(e) => setEditTaskTitle(e.target.value)}
+                  value={editTaskTitle}
+                />
+                {!!error ? <p className="error">{error}</p> : null}
+                <Button style={{ width: "100%" }} type="submit">
+                  + Edit Task
+                </Button>
+              </form>
             </Card>
           </div>
+        </Modal>
+      ) : null}
+
+      {isDeleteOpen ? (
+        <Modal>
+          <Card
+            closeBtn={true}
+            onClick={() => deleteModalClose()}
+            width="296px"
+            height="193px"
+          >
+            <div className="deleteContainer">
+              <p>You really want to delete this todo?</p>
+              <div className="buttonContainer">
+                <Button
+                  onClick={() => handleDeleteConfirm("yes")}
+                  style={{ width: "100%", backgroundColor: "red" }}
+                >
+                  Yes
+                </Button>
+                <Button
+                  onClick={() => handleDeleteConfirm("no")}
+                  style={{ width: "100%" }}
+                >
+                  No
+                </Button>
+              </div>
+            </div>
+          </Card>
         </Modal>
       ) : null}
     </>

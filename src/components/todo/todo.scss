@@ -9,10 +9,18 @@
   .todo__container {
     @include flex-box;
     .todo__info {
+      width: 90%;
       @include flex-box;
       gap: 10px;
       font-size: 20px;
       color: #5285ec;
+
+      p {
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
 
     .todo__actions {

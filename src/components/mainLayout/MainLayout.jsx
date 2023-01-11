@@ -1,7 +1,7 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
-import Navbar from "../navbar";
+import Navbar from "../navbar/Navbar";
 import "./mainLayout.scss";
 
 export default function MainLayout() {

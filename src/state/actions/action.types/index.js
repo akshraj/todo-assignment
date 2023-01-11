@@ -27,6 +27,8 @@ export const ActionType = {
   GET_TODO_LOADING: "get_todo_loading",
   GET_TODO_SUCCESS: "get_todo_success",
   GET_TODO_ERROR: "get_todo_error",
-  EDIT_MODAL_OPEN:"edit_modal_open",
-  EDIT_MODAL_CLOSE:"edit_modal_close",
+  EDIT_MODAL_OPEN: "edit_modal_open",
+  EDIT_MODAL_CLOSE: "edit_modal_close",
+  DELETE_MODAL_OPEN: "delete_modal_open",
+  DELETE_MODAL_CLOSE: "delete_modal_close",
 };
