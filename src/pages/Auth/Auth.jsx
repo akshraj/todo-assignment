@@ -1,5 +1,5 @@
 import "./auth.scss";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useActions } from "../../hooks/useActions";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -10,6 +10,7 @@ import useAuth from "../../hooks/useAuth";
 
 export default function Auth() {
   const { user } = useAuth();
+  const { loggedInUser, error } = useSelector((state) => state.auth);
   const { loginUser } = useActions();
   const navigate = useNavigate();
 
@@ -26,10 +27,18 @@ export default function Auth() {
 
   useEffect(() => {
     if (!!user) {
-      localStorage.setItem("user", JSON.stringify(user));
       navigate("/");
     }
   }, [user, navigate]);
+
+  useEffect(() => {
+    if (!!loggedInUser) {
+      localStorage.setItem("user", JSON.stringify(loggedInUser));
+      navigate("/");
+    }
+  }, [loggedInUser, navigate]);
+
+  console.log("User",loggedInUser)
 
   return (
     <div className="auth">
@@ -56,6 +65,7 @@ export default function Auth() {
           {formik.touched.name ? (
             <p className="error">{formik.errors.name}</p>
           ) : null}
+          {!!error ? <p className="error">{error}</p> : null}
           <Button type="submit">Login</Button>
         </form>
       </Card>

@@ -1,8 +1,24 @@
 import { ActionType } from "../action.types";
 
+const users = [
+  {
+    id: 1,
+    userId: "john123",
+    name: "John Doe",
+  },
+];
 export const loginUser = (userData) => {
   return async (dispatch) => {
-    dispatch({ type: ActionType.USER_LOGIN_SUCCESS, payload: userData });
+    try {
+      const userFound = users?.find((user) => user.userId === userData.userId);
+      if (!!userFound) {
+        dispatch({ type: ActionType.USER_LOGIN_SUCCESS, payload: userFound });
+      } else {
+        throw new Error("User not found");
+      }
+    } catch (err) {
+      dispatch({ type: ActionType.USER_LOGIN_ERROR, payload: err.message });
+    }
   };
 };
 export const getTodos = (userId) => {

@@ -1,7 +1,8 @@
 import { ActionType } from "../actions/action.types";
 
 const initialState = {
-  user: null,
+  userData: null,
+  error: "",
 };
 
 const reducer = (state = initialState, action) => {
@@ -9,7 +10,14 @@ const reducer = (state = initialState, action) => {
     case ActionType.USER_LOGIN_SUCCESS:
       return {
         ...state,
-        user: action.payload,
+        loggedInUser: action.payload,
+        error: "",
+      };
+    case ActionType.USER_LOGIN_ERROR:
+      return {
+        ...state,
+        loggedInUser: null,
+        error: action.payload,
       };
     default:
       return state;
