@@ -1,8 +1,8 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
-import MainLayout from "./components/mainLayout/MainLayout";
 import Auth from "./pages/Auth/Auth";
 import Dashboard from "./pages/Dashboard/Dashboard";
+import { MainLayout } from "./components";
 
 function App() {
   return (

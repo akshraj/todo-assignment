@@ -10,8 +10,9 @@ const users = [
 export const loginUser = (userData) => {
   return async (dispatch) => {
     try {
-      const userFound = users?.find((user) => user.userId === userData.userId);
-      if (!!userFound) {
+      const userFound =
+        users?.find((user) => user.userId === userData.userId) || {};
+      if (Object.keys(userFound).length > 0) {
         dispatch({ type: ActionType.USER_LOGIN_SUCCESS, payload: userFound });
       } else {
         throw new Error("User not found");
